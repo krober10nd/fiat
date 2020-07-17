@@ -26,8 +26,7 @@ class LagrangeDualSet(dual_set.DualSet):
             entity_ids[dim] = {}
             for entity in sorted(top[dim]):
                 pts_cur = ref_el.make_points(dim, entity, degree)
-                nodes_cur = [functional.PointEvaluation(ref_el, x)
-                             for x in pts_cur]
+                nodes_cur = [functional.PointEvaluation(ref_el, x) for x in pts_cur]
                 nnodes_cur = len(nodes_cur)
                 nodes += nodes_cur
                 entity_ids[dim][entity] = list(range(cur, cur + nnodes_cur))
