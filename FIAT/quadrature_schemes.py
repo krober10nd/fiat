@@ -128,6 +128,29 @@ def _kmv_lump_scheme(ref_el, degree):
         w[0:3] = 1.0 / 40.0
         w[3:6] = 1.0 / 15.0
         w[6] = 9.0 / 40.0
+    elif degree == 3:
+        if sd == 2:
+            x = list(ref_el.vertices)
+            alpha = 0.2934695559090401
+            beta = 0.2073451756635909
+            x.extend(
+                [
+                    (alpha, 0.0),
+                    (1 - alpha, 0.0),
+                    (1 - alpha, alpha),
+                    (alpha, 1 - alpha),
+                    (0.0, 1 - alpha),
+                    (0.0, alpha),
+                ]  # edge points
+            )
+            x.extend(
+                [(beta, beta), (1 - 2 * beta, beta), (beta, 1 - 2 * beta * beta)]
+            )  # points in center of cell
+            print(len(x))
+            w = arange(12, dtype=float64)
+            w[0:3] = 0.007436456512410291
+            w[3:9] = 0.02442084061702551
+            w[9:12] = 0.1103885289202054
 
     # Return scheme
     return QuadratureRule(UFCTriangle(), x, w)

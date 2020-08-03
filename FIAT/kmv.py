@@ -32,16 +32,27 @@ def _get_topology(ref_el, degree):
                 1: dict((i, [i + 3]) for i in range(3)),
                 2: {0: [6]},
             }
+    elif degree == 3:
+        if sd == 2:
+            entity_ids = {
+                0: dict((i, [i]) for i in range(3)),
+                1: dict((i, [i + 3]) for i in range(6)),
+                2: dict((i, [i + 9]) for i in range(3)),
+            }
     return entity_ids
 
 
 def _enrich(ref_el, degree):
-    "pair spaces using bubbles following rules in ref listed below"
+    """pair spaces using bubbles following rules in ref listed below"""
     if degree == 1:
         return lagrange.Lagrange(ref_el, degree)
     if degree == 2:
         P = lagrange.Lagrange(ref_el, 2)
         B = bubble.Bubble(ref_el, 3)
+        return NodalEnrichedElement(P, B)
+    if degree == 3:
+        P = lagrange.Lagrange(ref_el, 3)
+        B = bubble.Bubble(ref_el, 4)
         return NodalEnrichedElement(P, B)
 
 
@@ -68,8 +79,8 @@ class KMV(finite_element.CiarletElement):
     def __init__(self, ref_el, degree):
         if ref_el.shape != 2:
             raise NotImplementedError("Only triangles are currently implemented.")
-        if degree > 2:
-            raise NotImplementedError("Only P < 3 are currently implemented.")
+        if degree > 3:
+            raise NotImplementedError("Only P < 4 are currently implemented.")
         S = _enrich(ref_el, degree)
         poly_set = S.get_nodal_basis()
         dual = KMVDualSet(ref_el, degree)

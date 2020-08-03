@@ -9,7 +9,9 @@ I = UFCInterval()
 T = UFCTriangle()
 
 
-@pytest.mark.parametrize("element_degree", [(KMV(T, 1), 1), (KMV(T, 2), 2)])
+@pytest.mark.parametrize(
+    "element_degree", [(KMV(T, 1), 1), (KMV(T, 2), 2), (KMV(T, 3), 3)]
+)
 def test_Kronecker_property(element_degree):
     """
     Evalulating the nodal basis at the special quadrature points should have a Kronecker property.
@@ -20,7 +22,7 @@ def test_Kronecker_property(element_degree):
     assert np.allclose(np.sum(basis, axis=1), 1.0)
 
 
-@pytest.mark.parametrize("degree", [2])
+@pytest.mark.parametrize("degree", [2, 3])
 def test_edge_degree(degree):
     """Verify that the outer edges of a degree KMV element
        are indeed of degree and the interior is of degree+1"""
@@ -43,4 +45,4 @@ def test_edge_degree(degree):
         edge_values = element.tabulate(0, qr.get_points(), (1, e))[(0, 0)]
         # degree edge should be orthogonal to degree+1 ONpoly edge values
         result = edge_values @ W @ interval_vals.T
-        assert np.allclose(np.sum(result, axis=1), 0.0)
+        assert np.allclose(np.sum(result), 0.0)
