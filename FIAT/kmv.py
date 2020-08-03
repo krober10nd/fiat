@@ -45,18 +45,18 @@ def _enrich(ref_el, degree):
         return NodalEnrichedElement(P, B)
 
 
-class LumpDualSet(dual_set.DualSet):
-    """the dual basis for lumped simplical elements."""
+class KMVDualSet(dual_set.DualSet):
+    """the dual basis for KMV simplical elements."""
 
     def __init__(self, ref_el, degree):
         entity_ids = {}
         entity_ids = _get_topology(ref_el, degree)
         lr = create_quadrature(ref_el, degree, scheme="KMV")
         nodes = [functional.PointEvaluation(ref_el, x) for x in lr.pts]
-        super(LumpDualSet, self).__init__(nodes, ref_el, entity_ids)
+        super(KMVDualSet, self).__init__(nodes, ref_el, entity_ids)
 
 
-class Lump(finite_element.CiarletElement):
+class KMV(finite_element.CiarletElement):
     """The lumped finite element (NB: requires custom quad. "KMV" points
        to achieve a diagonal mass matrix).
 
@@ -72,6 +72,6 @@ class Lump(finite_element.CiarletElement):
             raise NotImplementedError("Only P < 3 are currently implemented.")
         S = _enrich(ref_el, degree)
         poly_set = S.get_nodal_basis()
-        dual = LumpDualSet(ref_el, degree)
+        dual = KMVDualSet(ref_el, degree)
         formdegree = 0  # 0-form
-        super(Lump, self).__init__(poly_set, dual, degree, formdegree)
+        super(KMV, self).__init__(poly_set, dual, degree, formdegree)

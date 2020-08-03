@@ -39,7 +39,7 @@ from FIAT.hdiv_trace import HDivTrace
 from FIAT.mixed import MixedElement  # noqa: F401
 from FIAT.restricted import RestrictedElement  # noqa: F401
 from FIAT.quadrature_element import QuadratureElement  # noqa: F401
-from FIAT.lump import Lump
+from FIAT.kmv import KMV
 
 # Important functionality
 from FIAT.quadrature import make_quadrature  # noqa: F401
@@ -66,7 +66,7 @@ supported_elements = {
     "Discontinuous Raviart-Thomas": DiscontinuousRaviartThomas,
     "Hermite": CubicHermite,
     "Lagrange": Lagrange,
-    "Lump": Lump,
+    "KMV": KMV,
     "Gauss-Lobatto-Legendre": GaussLobattoLegendre,
     "Gauss-Legendre": GaussLegendre,
     "Gauss-Radau": GaussRadau,
