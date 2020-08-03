@@ -105,8 +105,9 @@ def _fiat_scheme(ref_el, degree):
 
 
 def _kmv_lump_scheme(ref_el, degree):
-    """Highly specialized quadrature schemes for simplices solving the
-       acoustic wave equation with Lump type elements to produce diagonal mass matrices
+    """Specialized quadrature schemes for simplices solving the
+       acoustic wave equation with KMV-type elements that produce diagonal mass matrices.
+
        Reference:
        Higher-order triangular and tetrahedral finite elements with mass
        lumping for solving the wave equation
