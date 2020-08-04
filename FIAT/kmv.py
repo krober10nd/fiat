@@ -85,4 +85,10 @@ class KMV(finite_element.CiarletElement):
         poly_set = S.get_nodal_basis()
         dual = KMVDualSet(ref_el, degree)
         formdegree = 0  # 0-form
-        super(KMV, self).__init__(poly_set, dual, degree, formdegree)
+        if degree < 3:
+            super(KMV, self).__init__(poly_set, dual, degree, formdegree)
+        # Bubble elements for cubic KMV have a dimension of 12 (but NodalEnrichedElement has a dimension of 13)
+        elif degree == 3:
+            super(KMV, self).__init__(
+                poly_set.take(range(12)), dual, degree, formdegree
+            )

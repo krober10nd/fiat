@@ -133,7 +133,6 @@ def _kmv_lump_scheme(ref_el, degree):
             x = list(ref_el.vertices)
             alpha = 0.2934695559090401
             beta = 0.2073451756635909
-            print(x)
             x.extend(
                 [
                     (1 - alpha, alpha),
