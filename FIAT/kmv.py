@@ -43,7 +43,7 @@ def _get_topology(ref_el, degree):
 
 
 def _enrich(ref_el, degree):
-    """pair spaces using bubbles following rules in ref listed below"""
+    """Pair spaces using bubbles following rules in ref listed below"""
     if degree == 1:
         return lagrange.Lagrange(ref_el, degree)
     if degree == 2:

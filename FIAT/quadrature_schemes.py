@@ -133,20 +133,20 @@ def _kmv_lump_scheme(ref_el, degree):
             x = list(ref_el.vertices)
             alpha = 0.2934695559090401
             beta = 0.2073451756635909
+            print(x)
             x.extend(
                 [
-                    (alpha, 0.0),
-                    (1 - alpha, 0.0),
                     (1 - alpha, alpha),
                     (alpha, 1 - alpha),
                     (0.0, 1 - alpha),
                     (0.0, alpha),
+                    (alpha, 0.0),
+                    (1 - alpha, 0.0),
                 ]  # edge points
             )
             x.extend(
-                [(beta, beta), (1 - 2 * beta, beta), (beta, 1 - 2 * beta * beta)]
+                [(beta, beta), (1 - 2 * beta, beta), (beta, 1 - 2 * beta)]
             )  # points in center of cell
-            print(len(x))
             w = arange(12, dtype=float64)
             w[0:3] = 0.007436456512410291
             w[3:9] = 0.02442084061702551
