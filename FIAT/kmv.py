@@ -34,11 +34,21 @@ def _get_topology(ref_el, degree):
             }
     elif degree == 3:
         if sd == 2:
+            etop = [[3, 4], [5, 6], [7, 8]]
             entity_ids = {
                 0: dict((i, [i]) for i in range(3)),
-                1: dict((i, [i + 3]) for i in range(6)),
-                2: dict((i, [i + 9]) for i in range(3)),
+                1: dict((i, etop[i]) for i in range(3)),
+                2: {0: [9, 10, 11, 12]},
             }
+    elif degree == 4:
+        if sd == 2:
+            etop = [[6, 3, 7], [8, 4, 9], [10, 5, 11]]
+            entity_ids = {
+                0: dict((i, [i]) for i in range(3)),
+                1: dict((i, etop[i]) for i in range(3)),
+                2: {0: [i for i in range(9, 17)]},
+            }
+
     return entity_ids
 
 
@@ -46,14 +56,10 @@ def _enrich(ref_el, degree):
     """Pair spaces using bubbles following rules in ref listed below"""
     if degree == 1:
         return lagrange.Lagrange(ref_el, degree)
-    if degree == 2:
-        P = lagrange.Lagrange(ref_el, 2)
-        B = bubble.Bubble(ref_el, 3)
-        return NodalEnrichedElement(P, B)
-    if degree == 3:
-        P = lagrange.Lagrange(ref_el, 3)
-        B = bubble.Bubble(ref_el, 4)
-        return NodalEnrichedElement(P, B)
+    elif degree < 5:
+        P = lagrange.Lagrange(ref_el, degree)
+        B = bubble.Bubble(ref_el, degree + 1)
+    return NodalEnrichedElement(P, B)
 
 
 class KMVDualSet(dual_set.DualSet):
@@ -79,16 +85,20 @@ class KMV(finite_element.CiarletElement):
     def __init__(self, ref_el, degree):
         if ref_el.shape != 2:
             raise NotImplementedError("Only triangles are currently implemented.")
-        if degree > 3:
-            raise NotImplementedError("Only P < 4 are currently implemented.")
+        if degree > 4:
+            raise NotImplementedError("Only P < 5 are currently implemented.")
         S = _enrich(ref_el, degree)
         poly_set = S.get_nodal_basis()
         dual = KMVDualSet(ref_el, degree)
         formdegree = 0  # 0-form
-        if degree < 3:
-            super(KMV, self).__init__(poly_set, dual, degree, formdegree)
         # Bubble elements for cubic KMV have a dimension of 12 (but NodalEnrichedElement has a dimension of 13)
-        elif degree == 3:
+        if degree == 3:
             super(KMV, self).__init__(
                 poly_set.take(range(12)), dual, degree, formdegree
             )
+        elif degree == 4:
+            super(KMV, self).__init__(
+                poly_set.take(range(18)), dual, degree, formdegree
+            )
+        else:
+            super(KMV, self).__init__(poly_set, dual, degree, formdegree)

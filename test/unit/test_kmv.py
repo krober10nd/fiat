@@ -10,7 +10,7 @@ T = UFCTriangle()
 
 
 @pytest.mark.parametrize(
-    "element_degree", [(KMV(T, 1), 1), (KMV(T, 2), 2), (KMV(T, 3), 3)]
+    "element_degree", [(KMV(T, 1), 1), (KMV(T, 2), 2), (KMV(T, 3), 3), (KMV(T, 4), 4)]
 )
 def test_Kronecker_property(element_degree):
     """
@@ -22,7 +22,7 @@ def test_Kronecker_property(element_degree):
     assert np.allclose(np.sum(basis, axis=1), 1.0)
 
 
-@pytest.mark.parametrize("degree", [2, 3])
+@pytest.mark.parametrize("degree", [2, 3, 4])
 def test_edge_degree(degree):
     """Verify that the outer edges of a degree KMV element
        are indeed of degree and the interior is of degree+1"""

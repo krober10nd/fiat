@@ -105,7 +105,7 @@ def _fiat_scheme(ref_el, degree):
 
 
 def _kmv_lump_scheme(ref_el, degree):
-    """Specialized quadrature schemes for simplices solving the
+    """Specialized quadrature schemes for P < 5 simplices solving the
        acoustic wave equation with KMV-type elements that produce diagonal mass matrices.
 
        Reference:
@@ -130,9 +130,9 @@ def _kmv_lump_scheme(ref_el, degree):
         w[6] = 9.0 / 40.0
     elif degree == 3:
         if sd == 2:
-            x = list(ref_el.vertices)
             alpha = 0.2934695559090401
             beta = 0.2073451756635909
+            x = list(ref_el.vertices)
             x.extend(
                 [
                     (1 - alpha, alpha),
@@ -150,6 +150,36 @@ def _kmv_lump_scheme(ref_el, degree):
             w[0:3] = 0.007436456512410291
             w[3:9] = 0.02442084061702551
             w[9:12] = 0.1103885289202054
+    elif degree == 4:
+        if sd == 2:
+            alpha = 0.2113248654051871
+            beta1 = 0.4247639617258106
+            beta2 = 0.130791593829745
+            x = list(ref_el.vertices)
+            for e in range(3):
+                x.extend(ref_el.make_points(1, e, 2))  # edge midpoints
+            x.extend(
+                [
+                    (1 - alpha, alpha),
+                    (alpha, 1 - alpha),
+                    (0.0, 1 - alpha),
+                    (0.0, alpha),
+                    (alpha, 0.0),
+                    (1 - alpha, 0.0),
+                ]  # edge points
+            )
+            x.extend(
+                [(beta1, beta1), (1 - 2 * beta1, beta1), (beta1, 1 - 2 * beta1)]
+            )  # points in center of cell
+            x.extend(
+                [(beta2, beta2), (1 - 2 * beta2, beta2), (beta1, 1 - 2 * beta2)]
+            )  # points in center of cell
+            w = arange(18, dtype=float64)
+            w[0:3] = 0.003174603174603175
+            w[3:6] = 0.0126984126984127
+            w[6:12] = 0.01071428571428571
+            w[12:15] = 0.07878121446939182
+            w[15:18] = 0.05058386489568756
 
     # Return scheme
     return QuadratureRule(UFCTriangle(), x, w)
