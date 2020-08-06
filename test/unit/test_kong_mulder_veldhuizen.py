@@ -3,10 +3,23 @@ import pytest
 
 from FIAT.reference_element import UFCInterval, UFCTriangle
 from FIAT import create_quadrature, make_quadrature, polynomial_set
-from FIAT.kmv import KMV
+from FIAT.kong_mulder_veldhuizen import KMV
 
 I = UFCInterval()
 T = UFCTriangle()
+
+
+@pytest.mark.parametrize("degree_exactfor", [(1, 1), (2, 3), (3, 5), (4, 7)])
+def test_kmv_basis_values(degree_exactfor):
+    """Ensure that integrating a simple monomial produces the expected results."""
+    degree, test_degree = degree_exactfor
+    fe = KMV(T, degree)
+    qr = create_quadrature(T, degree, scheme="KMV")
+    tab = fe.tabulate(0, qr.pts)[(0, 0)]
+    coefs = [n(lambda x: x[0] ** test_degree) for n in fe.dual.nodes]
+    integral = np.dot(coefs, np.dot(tab, qr.wts))
+    reference = np.dot([x[0] ** test_degree for x in qr.pts], qr.wts)
+    assert np.allclose(integral, reference, rtol=1e-14)
 
 
 @pytest.mark.parametrize(

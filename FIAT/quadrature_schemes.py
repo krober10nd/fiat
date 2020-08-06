@@ -88,7 +88,7 @@ def create_quadrature(ref_el, degree, scheme="default"):
             return _fiat_scheme(ref_el, degree)
     elif scheme == "canonical":
         return _fiat_scheme(ref_el, degree)
-    elif scheme == "KMV":  # KONG, MULDER, VAN VELDHUIZEN
+    elif scheme == "KMV":  # Kong-Mulder-Veldhuizen scheme
         return _kmv_lump_scheme(ref_el, degree)
     else:
         raise ValueError("Unknown quadrature scheme: %s." % scheme)
