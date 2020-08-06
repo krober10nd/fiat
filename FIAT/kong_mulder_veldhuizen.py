@@ -46,7 +46,7 @@ def _get_topology(ref_el, degree):
             entity_ids = {
                 0: dict((i, [i]) for i in range(3)),
                 1: dict((i, etop[i]) for i in range(3)),
-                2: {0: [i for i in range(9, 17)]},
+                2: {0: [i for i in range(9, 18)]},
             }
 
     return entity_ids

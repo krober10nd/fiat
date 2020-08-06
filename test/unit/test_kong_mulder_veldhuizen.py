@@ -9,17 +9,11 @@ I = UFCInterval()
 T = UFCTriangle()
 
 
-@pytest.mark.parametrize("degree_exactfor", [(1, 1), (2, 3), (3, 5), (4, 7)])
-def test_kmv_basis_values(degree_exactfor):
-    """Ensure that integrating a simple monomial produces the expected results."""
-    degree, test_degree = degree_exactfor
-    fe = KMV(T, degree)
-    qr = create_quadrature(T, degree, scheme="KMV")
-    tab = fe.tabulate(0, qr.pts)[(0, 0)]
-    coefs = [n(lambda x: x[0] ** test_degree) for n in fe.dual.nodes]
-    integral = np.dot(coefs, np.dot(tab, qr.wts))
-    reference = np.dot([x[0] ** test_degree for x in qr.pts], qr.wts)
-    assert np.allclose(integral, reference, rtol=1e-14)
+@pytest.mark.parametrize("p_d", [(1, 1), (2, 3), (3, 5), (4, 7)])
+def test_kmv_quad_schemes(p_d):
+    p, d = p_d
+    q = create_quadrature(T, p, "KMV")
+    assert np.allclose(q.integrate(lambda x: sum(x) ** d), 1 / (d + 2))
 
 
 @pytest.mark.parametrize(
