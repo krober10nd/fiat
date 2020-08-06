@@ -62,7 +62,7 @@ def _enrich(ref_el, degree):
     return NodalEnrichedElement(P, B)
 
 
-class KMVDualSet(dual_set.DualSet):
+class KongMulderVeldhuizenDualSet(dual_set.DualSet):
     """the dual basis for KMV simplical elements."""
 
     def __init__(self, ref_el, degree):
@@ -70,10 +70,10 @@ class KMVDualSet(dual_set.DualSet):
         entity_ids = _get_topology(ref_el, degree)
         lr = create_quadrature(ref_el, degree, scheme="KMV")
         nodes = [functional.PointEvaluation(ref_el, x) for x in lr.pts]
-        super(KMVDualSet, self).__init__(nodes, ref_el, entity_ids)
+        super(KongMulderVeldhuizenDualSet, self).__init__(nodes, ref_el, entity_ids)
 
 
-class KMV(finite_element.CiarletElement):
+class KongMulderVeldhuizen(finite_element.CiarletElement):
     """The lumped finite element (NB: requires custom quad. "KMV" points
        to achieve a diagonal mass matrix).
 
@@ -89,16 +89,18 @@ class KMV(finite_element.CiarletElement):
             raise NotImplementedError("Only P < 5 are currently implemented.")
         S = _enrich(ref_el, degree)
         poly_set = S.get_nodal_basis()
-        dual = KMVDualSet(ref_el, degree)
+        dual = KongMulderVeldhuizenDualSet(ref_el, degree)
         formdegree = 0  # 0-form
         # Bubble elements for cubic KMV have a dimension of 12 (but NodalEnrichedElement has a dimension of 13)
         if degree == 3:
-            super(KMV, self).__init__(
+            super(KongMulderVeldhuizen, self).__init__(
                 poly_set.take(range(12)), dual, degree, formdegree
             )
         elif degree == 4:
-            super(KMV, self).__init__(
+            super(KongMulderVeldhuizen, self).__init__(
                 poly_set.take(range(18)), dual, degree, formdegree
             )
         else:
-            super(KMV, self).__init__(poly_set, dual, degree, formdegree)
+            super(KongMulderVeldhuizen, self).__init__(
+                poly_set, dual, degree, formdegree
+            )
